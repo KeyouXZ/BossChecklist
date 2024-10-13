@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using System;
 using Terraria;
 using TerrariaApi.Server;
 using TShockAPI;
@@ -12,7 +11,7 @@ namespace BossChecklist
         public override string Author => "HDSeventh, remade by Keyou";
         public override string Description => "Boss Checklist for TShock";
         public override string Name => "Boss Checklist";
-        public override Version Version { get { return new Version(1, 0, 1); } }
+        public override Version Version { get { return new Version(1, 0, 2); } }
         public BossChecklist_TShock(Main game) : base(game) { }
         public override void Initialize()
         {
@@ -26,22 +25,26 @@ namespace BossChecklist
 
         public void bosscheck(CommandArgs args)
         {
-            var killed = "[c/008000:✔]";
-            var alive = "[c/FF0000:✖]";
+            var killed = "[c/008000:O]";
+            var alive = "[c/FF0000:X]";
+
+            string textPage = null;
             StringBuilder sb = new StringBuilder();
             if (args.Parameters.Count == 0 || args.Parameters[0] == "help") {
                 sb.Append("Usage: /bosses [pre-hardmode/1] | [hardmode/2] | [event/3]");
 
             } else if (args.Parameters[0] == "1" || args.Parameters[0] == "pre-hardmode") {
+                textPage = "(Bosses 1/3):";
                 sb.Append("Eye of Cthulu " + (NPC.downedBoss1 ? killed : alive));
                 sb.Append("\nKing Slime " + (NPC.downedSlimeKing ? killed : alive));
                 sb.Append("\nEvil Boss " + (NPC.downedBoss2 ? killed : alive));
-                sb.Append("\nQueen Bee" + (NPC.downedQueenBee ? killed : alive));
+                sb.Append("\nQueen Bee " + (NPC.downedQueenBee ? killed : alive));
                 sb.Append("\nSkeletron " + (NPC.downedBoss3 ? killed : alive));
-                sb.Append("\nDeerclops" + (NPC.downedDeerclops ? killed : alive));
+                sb.Append("\nDeerclops " + (NPC.downedDeerclops ? killed : alive));
                 sb.Append("\nWall of Flesh " + (Main.hardMode ? killed : alive));
 
             } else if (args.Parameters[0] == "2" || args.Parameters[0] == "hardmode") {
+                textPage = "(Bosses 2/3):";
                 sb.Append("Queen Slime " + (NPC.downedQueenSlime ? killed : alive));
                 sb.Append("\nThe Destroyer " + (NPC.downedMechBoss1 ? killed : alive));
                 sb.Append("\nThe Twins " + (NPC.downedMechBoss2 ? killed : alive));
@@ -54,19 +57,25 @@ namespace BossChecklist
                 sb.Append("\nMoon Lord " + (NPC.downedMoonlord ? killed : alive));
 
             } else if (args.Parameters[0] == "3" || args.Parameters[0] == "event"){
-                sb.Append("\nMourning Wood" + (NPC.downedHalloweenTree ? killed : alive));
-                sb.Append("\nPumpking" + (NPC.downedHalloweenKing ? killed : alive));
-                sb.Append("\nEverscream" + (NPC.downedChristmasTree ? killed : alive));
-                sb.Append("\nSanta-NK1" + (NPC.downedChristmasSantank ? killed : alive));
-                sb.Append("\nIce Queen" + (NPC.downedChristmasIceQueen ? killed : alive));
-                sb.Append("\nMartian Saurcer" + (NPC.downedMartians ? killed : alive));
-                sb.Append("\nSolar Pillar" + (NPC.downedTowerSolar ? killed : alive));
-                sb.Append("\nNebula Pillar" + (NPC.downedTowerNebula ? killed : alive));
-                sb.Append("\nVortex Pillar" + (NPC.downedTowerVortex ? killed : alive));
-                sb.Append("\nStardust Pillar" + (NPC.downedTowerStardust ? killed : alive));
+                textPage = "(Bosses 3/3):";
+                sb.Append("\nMourning Wood " + (NPC.downedHalloweenTree ? killed : alive));
+                sb.Append("\nPumpking " + (NPC.downedHalloweenKing ? killed : alive));
+                sb.Append("\nEverscream " + (NPC.downedChristmasTree ? killed : alive));
+                sb.Append("\nSanta-NK1 " + (NPC.downedChristmasSantank ? killed : alive));
+                sb.Append("\nIce Queen " + (NPC.downedChristmasIceQueen ? killed : alive));
+                sb.Append("\nMartian Saurcer " + (NPC.downedMartians ? killed : alive));
+                sb.Append("\nSolar Pillar " + (NPC.downedTowerSolar ? killed : alive));
+                sb.Append("\nNebula Pillar " + (NPC.downedTowerNebula ? killed : alive));
+                sb.Append("\nVortex Pillar " + (NPC.downedTowerVortex ? killed : alive));
+                sb.Append("\nStardust Pillar " + (NPC.downedTowerStardust ? killed : alive));
             } else {
                 sb.Append("Invalid parameters");
             }
+
+            if (!string.IsNullOrEmpty(textPage)) {
+                args.Player.SendSuccessMessage(textPage);
+            }
+
             args.Player.SendInfoMessage(sb.ToString());
         }
 
